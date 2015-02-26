@@ -1,0 +1,7 @@
+TestFile.rtf
+*.lock
+*.metadata*
+*.class
+*.prefs
+*.classpath
+*.project
