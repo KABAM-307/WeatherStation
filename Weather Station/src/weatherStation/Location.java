@@ -1,5 +1,3 @@
-package weatherStation;
-
 public class Location {
 
 	// Holds the x coordinate in [0] and the y coordinate in [1]
