@@ -10,20 +10,19 @@ import com.sun.net.httpserver.HttpServer;
 
 public class RESTServer {
 
-    ResponseHandler rHandler ;
-    HttpServer RESTServer;
-    int port;
-    
-    public RESTServer(ResponseHandler rHandler, int port) {
-      this.rHandler = rHandler;
-      this.port = port;
-    }
+	ResponseHandler rHandler ;
+	HttpServer RESTServer;
+	int port;
+	
+	public RESTServer(ResponseHandler rHandler, int port) {
+		this.rHandler = rHandler;
+		this.port = port;
+	}
 
-    public void startServer() throws IOException {
-      RESTServer = HttpServer.create(new InetSocketAddress(port), 0);
-      RESTServer.createContext("/sensors", rHandler);
-      RESTServer.setExecutor(null); // creates a default executor
-      RESTServer.start();
-  }
-
+	public void startServer() throws IOException {
+		RESTServer = HttpServer.create(new InetSocketAddress(port), 0);
+		RESTServer.createContext("/sensors", rHandler);
+		RESTServer.setExecutor(null); // creates a default executor
+		RESTServer.start();
+	}
 }

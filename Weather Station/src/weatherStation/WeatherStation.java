@@ -19,8 +19,8 @@ public class WeatherStation {
 	private String alias;
 	private Location location;
 	private boolean shared;
-  private ResponseHandler rHandler;
-  private RESTServer server;
+	private ResponseHandler rHandler;
+	private RESTServer server;
 	
 	// Constructor for a WeatherStation
 	public WeatherStation(String alias, Location location, String serverIP, boolean shared) {
@@ -29,7 +29,7 @@ public class WeatherStation {
 		this.piID = setPiID();
 		this.serverIP = serverIP;
 		this.shared = shared;
-    this.rHandler = new ResponseHandler(this);
+		this.rHandler = new ResponseHandler(this);
 	}
 	
 	// Add a sensor to the list of attached sensors
@@ -80,9 +80,9 @@ public class WeatherStation {
 	
 	// Handles a request from the server for information about a station
 	public String webRequestResponse() {
-    return this.alias;
+		return this.alias;
 		// TODO: Web server request code goes here
-    // Returns a JSON formatted string of weather data
+		// Returns a JSON formatted string of weather data
 	}
 	
 	// Returns JSON String values of the sensorsAttached
@@ -103,18 +103,18 @@ public class WeatherStation {
 		return UUID.randomUUID().toString();
 	}
 
-  public void startServer(int port) {
-    if (server == null) {
-      server = new RESTServer(rHandler, port);
-      try {
-        server.startServer();
-      } catch(IOException ex) {
-        System.out.println("Starting server failed...");
-        System.exit(1);
-      }
+	public void startServer(int port) {
+		if (server == null) {
+			server = new RESTServer(rHandler, port);
+			
+			try {
+				server.startServer();
+			} catch(IOException ex) {
+				System.out.println("Starting server failed...");
+				System.exit(1);
+			}
 
-      System.out.println("Server is running on port " + port + ".");
-    }
-
-  }
+			System.out.println("Server is running on port " + port + ".");
+		}
+	}
 }
