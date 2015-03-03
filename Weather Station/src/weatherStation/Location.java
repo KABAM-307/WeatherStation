@@ -23,13 +23,13 @@ public class Location {
 	}
 	
 	// Getter for the location coordinates 
-	// NOTE: Can change to get individual coords if want to
+	// NOTE: Can change to get individual coords if need to
 	public double[] getCoords(Location location) {
 		return location.coords;
 	}
 	
 	// Setter for the location coordinates
-	// NOTE: Can change to set individual coords if want to
+	// NOTE: Can change to set individual coords if need to
 	public void setCoords(double[] coords) {
 		this.coords = coords;
 	}
