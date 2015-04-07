@@ -1,4 +1,3 @@
-package weatherStation;
 
 public class Location {
 

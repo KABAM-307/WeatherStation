@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 package weatherStation;
 
+=======
+>>>>>>> origin/master
 public class Sensor {
 
 	private String type;

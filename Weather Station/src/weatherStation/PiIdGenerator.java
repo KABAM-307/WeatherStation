@@ -1,4 +1,3 @@
-package weatherStation;
 
 import java.util.UUID;
 

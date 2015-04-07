@@ -1,4 +1,4 @@
-package weatherStation;
+
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -18,7 +18,6 @@ public class Main {
 		String zipcode, serverUrl = null, alias = null, share, haveHumid, haveTemp, haveWind, havePress, haveLight, portNum, id = null;
 		int sensorCount = 0;
 		int port = 0, zip = 0;
-		Location location;
 		
 		if(!settingsFile.exists()) {
 			try {
