@@ -27,7 +27,7 @@ public class PostDataTask extends TimerTask {
     try {
 
       //Open http connection, and set request method to post
-      HttpURLConnection con = (HttpURLConnection) new URL(ws.getServerIP()).openConnection();
+      HttpURLConnection con = (HttpURLConnection) new URL(ws.getServerUrl()).openConnection();
       con.setRequestMethod("POST");
 
 
