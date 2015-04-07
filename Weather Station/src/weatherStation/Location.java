@@ -1,36 +1,34 @@
-package weatherStation
+package weatherStation;
 
 public class Location {
 
 	// Holds the x coordinate in [0] and the y coordinate in [1]
-	private double coords[] = new double[2];
-	private String name;
+	private String city;
+	private String state;
 	
 	// public constructor for location
-	public Location(String name, double coords[]) {
-		this.name = name;
-		this.coords = coords;
+	public Location(String city, String state) {
+		this.city = city;
+		this.state = state;
 	}
 	
 	// Setter for name of location
-	public void setName(String name) {
-		this.name = name;
+	public void setCity(String city) {
+		this.city = city;
+	}
+	
+	// Setter for name of location
+	public void setState(String state) {
+		this.state = state;
 	}
 	
 	// Getter for name of location
-	public String getName(Location location) {
-		return location.name;
+	public String getCity(Location location) {
+		return location.city;
 	}
-	
-	// Getter for the location coordinates 
-	// NOTE: Can change to get individual coords if need to
-	public double[] getCoords(Location location) {
-		return location.coords;
-	}
-	
-	// Setter for the location coordinates
-	// NOTE: Can change to set individual coords if need to
-	public void setCoords(double[] coords) {
-		this.coords = coords;
+		
+	// Getter for name of location
+	public String getState(Location location) {
+		return location.state;
 	}
 }

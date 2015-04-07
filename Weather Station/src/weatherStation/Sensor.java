@@ -1,4 +1,4 @@
-package weatherStation
+package weatherStation;
 
 public class Sensor {
 

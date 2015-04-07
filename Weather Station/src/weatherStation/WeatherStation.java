@@ -1,11 +1,12 @@
-package weatherStation
+package weatherStation;
 
 import java.util.LinkedList;
 import java.util.UUID;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+
+import org.omg.CORBA.portable.ResponseHandler;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -14,22 +15,29 @@ public class WeatherStation {
 	
 	private LinkedList<Sensor> sensorsAttached;
 	private int numSensors = 0;
-	private String serverIP;
+	private String serverUrl;
 	private String piID;
 	private String alias;
-	private Location location;
+	private int zipcode;
 	private boolean shared;
 	private ResponseHandler rHandler;
 	private RESTServer server;
 	
 	// Constructor for a WeatherStation
-	public WeatherStation(String alias, Location location, String serverIP, boolean shared) {
-		this.alias = alias;
-		this.location = location;
-		this.piID = setPiID();
-		this.serverIP = serverIP;
-		this.shared = shared;
+	public WeatherStation(int zipcode, String id, int port) {
+		if (id.equals(null)) {
+			this.piID = PiIdGenerator.generatePiID();
+		}
+		else {
+			this.piID = id;
+		}
+		this.zipcode = zipcode;
 		this.rHandler = new ResponseHandler(this);
+		this.startServer(port);
+	}
+	
+	public void setNumSensors(int num) {
+		this.numSensors = num;
 	}
 	
 	// Add a sensor to the list of attached sensors
@@ -39,23 +47,23 @@ public class WeatherStation {
 	}
 	
 	// Setter method for location
-	public void setLocation(Location location) {
-		this.location = location;
+	public void setZipcode(int zipcode) {
+		this.zipcode = zipcode;
 	}
 	
 	// Getter method for location
-	public Location getLocation() {
-		return this.location;
+	public int getZipcode() {
+		return this.zipcode;
 	}
 	
 	// Setter method for serverIP
-	public void setServerIP(String IP) {
-		this.serverIP = IP;
+	public void setServerUrl(String url) {
+		this.serverUrl = url;
 	}
 	
 	// Getter method for serverIP
-	public String getServerIP() {
-		return this.serverIP;
+	public String getServerUrl() {
+		return this.serverUrl;
 	}
 	
 	// Setter method for alias 
@@ -96,11 +104,6 @@ public class WeatherStation {
 	public void publishData(String serverIP) {
 		this.getSensorVals();
 		// TODO: HOW TO SEND TO ACTUAL SERVER?
-	}
-	
-	// Generate a new Id for a station using Java class UUID
-	private String setPiID() {
-		return UUID.randomUUID().toString();
 	}
 
 	public void startServer(int port) {
