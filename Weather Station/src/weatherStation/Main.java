@@ -76,19 +76,19 @@ public class Main {
 			    
 			    // Write all info to the file -- save instance of a class instead?
 				BufferedWriter output = new BufferedWriter(new FileWriter(settingsFile));
-	            output.write(id);
-	            output.write(Integer.toString(zip));
-	            output.write(owner);
-	            output.write(alias);
-	            output.write(serverUrl);
-	            output.write(port);
-	            output.write(Boolean.toString(infoShared));
-	            output.write(Integer.toString(sensorCount));
-	            output.write(Boolean.toString(humidity));
-	            output.write(Boolean.toString(temperature));
-	            output.write(Boolean.toString(wind));
-	            output.write(Boolean.toString(pressure));
-	            output.write(Boolean.toString(light));
+	            output.write(id + "\n");
+	            output.write(Integer.toString(zip) + "\n");
+	            output.write(owner + "\n");
+	            output.write(alias + "\n");
+	            output.write(serverUrl + "\n");
+	            output.write(port + "\n");
+	            output.write(Boolean.toString(infoShared) + "\n");
+	            output.write(Integer.toString(sensorCount) + "\n");
+	            output.write(Boolean.toString(humidity) + "\n");
+	            output.write(Boolean.toString(temperature) + "\n");
+	            output.write(Boolean.toString(wind) + "\n");
+	            output.write(Boolean.toString(pressure) + "\n");
+	            output.write(Boolean.toString(light) + "\n");
 	            output.close();	            
 	            
 			} catch (IOException e) {
@@ -138,6 +138,7 @@ public class Main {
         station.setAlias(alias);
         station.setServerUrl(serverUrl);
         station.setShared(infoShared);
+        station.postData();
         System.out.println("Congratulations you have successfully created or loaded a weather station!");
 	}
 
