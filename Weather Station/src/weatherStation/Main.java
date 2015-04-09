@@ -11,86 +11,80 @@ import java.util.UUID;
 
 public class Main {
 	public static void main(String[] args) {
-		
-		/* Start the server
-		ws.startServer(Integer.valueOf(args[0]));*/
+		// Create new File
 		File settingsFile = new File("weatherStationSettings");
-		boolean fileExists, infoShared = false, humidity, temperature, wind, pressure, light;
-		String zipcode, numSensors, serverUrl = null, alias = null, share, haveHumid, haveTemp, haveWind, havePress, haveLight, portNum, id = null;
-		int sensorCount = 0;
-		int port = 0, zip = 0;
+		
+		// Variables to hold file information given by user or read from file
+		boolean fileExists, infoShared = false, humidity = false, temperature = false, wind = false, pressure = false, light = false;
+		String serverUrl = null, alias = null, id = null;
+		int sensorCount = 0, port = 0, zip = 0;
 		
 		/* Returns true if the named file does not exist and 
 		*  was successfully created; false if the named file already exists */
 		fileExists = settingsFile.createNewFile();
 		
+		// If the file did not exist and was created, prompt user for all settings
 		if(fileExists == true) {
 			try {
 				// Open up standard input
 			    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 				
-			    // Prompt user for pi info
+			    // Generate a new PiID
+			    id = PiIdGenerator.generatePiID();
+			    
+			    // Prompt user for pi identifying information
 				System.out.print("Enter your zipcode: ");
-				zipcode = reader.readLine();
-				zip = Integer.parseInt(zipcode);
-				
-				System.out.print("Enter your serverURL: ");
-				serverUrl = reader.readLine();
+				zip = Integer.parseInt(reader.readLine());
 				
 				System.out.print("Give a name to your weather station (eg: PibyKate): ");
 				alias = reader.readLine();
 				
-				System.out.print("Would you like to share your weather data with other users? (Y for yes, N for no): ");
-				share = reader.readLine();	
-				infoShared = parseYesNo(share);
+				// Prompt user for server information
+				System.out.print("Enter your serverURL: ");
+				serverUrl = reader.readLine();
 				
+			    System.out.print("Enter the port number for your server: ");
+			    port = Integer.parseInt(reader.readLine());				
+				
+				// Prompt user for share option 
+				System.out.print("Would you like to share your weather data with other users? (Y for yes, N for no): ");
+				infoShared = parseYesNo(reader.readLine());
+				
+				// Prompt user about the different types of sensors
 				System.out.print("Do you have a humidity sensor? (Y for yes, N for no) ");
-				haveHumid = reader.readLine();
-				humidity = parseYesNo(haveHumid);
+				humidity = parseYesNo(reader.readLine());
 				if(humidity) sensorCount++;
 				
 				System.out.print("Do you have a temperature sensor? (Y for yes, N for no) ");
-				haveTemp = reader.readLine();
-				temperature = parseYesNo(haveTemp);
+				temperature = parseYesNo(reader.readLine());
 				if (temperature) sensorCount++;
 				
 				System.out.print("Do you have a wind sensor? (Y for yes, N for no) ");
-				haveWind = reader.readLine();
-				wind = parseYesNo(haveWind);
+				wind = parseYesNo(reader.readLine());
 				if (wind) sensorCount++;
 				
 				System.out.print("Do you have a presure sensor? (Y for yes, N for no) ");
-				havePress = reader.readLine();
-			    pressure = parseYesNo(havePress);
+			    pressure = parseYesNo(reader.readLine());
 			    if(pressure) sensorCount++;
 			    
 			    System.out.print("Do you have a light sensor? (Y for yes, N for no) ");
-				haveLight = reader.readLine();
-			    light = parseYesNo(haveLight);
+			    light = parseYesNo(reader.readLine());
 			    if(light) sensorCount++;
-			    
-			    // Ask for port number
-			    System.out.print("Enter the port number for your server: ");
-				portNum = reader.readLine();
-			    port = Integer.parseInt(portNum);
-			    
-			    // Generate a new PiID
-			    id = PiIdGenerator.generatePiID();
 			    
 			    // Write all info to the file -- save instance of a class instead?
 				BufferedWriter output = new BufferedWriter(new FileWriter(settingsFile));
-	            output.write("piID:" + id);
-	            output.write("zipcode:" + zipcode);
-	            output.write("alias:" + alias);
-	            output.write("serverUrl" + serverUrl);
-	            output.write("port:" + port);
-	            output.write("share:"+ Boolean.toString(infoShared));
-	            output.write("numSensors:" + Integer.toString(sensorCount));
-	            output.write("humidity:" + Boolean.toString(humidity));
-	            output.write("temperature:" + Boolean.toString(temperature));
-	            output.write("wind:" + Boolean.toString(wind));
-	            output.write("pressure:" + Boolean.toString(pressure));
-	            output.write("light:" + Boolean.toString(light));
+	            output.write(id);
+	            output.write(Integer.toString(zip));
+	            output.write(alias);
+	            output.write(serverUrl);
+	            output.write(port);
+	            output.write(Boolean.toString(infoShared));
+	            output.write(Integer.toString(sensorCount));
+	            output.write(Boolean.toString(humidity));
+	            output.write(Boolean.toString(temperature));
+	            output.write(Boolean.toString(wind));
+	            output.write(Boolean.toString(pressure));
+	            output.write(Boolean.toString(light));
 	            output.close();	            
 	            
 			} catch (IOException e) {
@@ -108,32 +102,23 @@ public class Main {
 				
 				// Read identifying information
 				id = fileIn.readLine();
-				zipcode = fileIn.readLine();
-				zip = Integer.parseInt(zipcode);
+				zip = Integer.parseInt(fileIn.readLine());
 				alias = fileIn.readLine();
 				
 				// Read server information
 				serverUrl = fileIn.readLine();
-				portNum = fileIn.readLine();
-				port = Integer.parseInt(portNum);
+				port = Integer.parseInt(fileIn.readLine());
 				
 				// Share info or not and number of sensors
-				share = fileIn.readLine();
-				infoShared = Boolean.parseBoolean(share);
-				numSensors = fileIn.readLine();
-				sensorCount = Integer.parseInt(numSensors);
+				infoShared = Boolean.parseBoolean(fileIn.readLine());
+				sensorCount = Integer.parseInt(fileIn.readLine());
 				
 				// Read types of sensors
-				haveHumid = fileIn.readLine();
-				humidity = Boolean.parseBoolean(haveHumid);
-				haveTemp = fileIn.readLine();
-				temperature = Boolean.parseBoolean(haveTemp);
-				haveWind = fileIn.readLine();
-				wind = Boolean.parseBoolean(haveWind);
-				havePress = fileIn.readLine();
-				pressure = Boolean.parseBoolean(havePress);
-				haveLight = fileIn.readLine();
-				light = Boolean.parseBoolean(haveLight);
+				humidity = Boolean.parseBoolean(fileIn.readLine());
+				temperature = Boolean.parseBoolean(fileIn.readLine());
+				wind = Boolean.parseBoolean(fileIn.readLine());
+				pressure = Boolean.parseBoolean(fileIn.readLine());
+				light = Boolean.parseBoolean(fileIn.readLine());
 						
 			} catch (IOException e) {
 				System.out.println("Error in reading settings file...");
