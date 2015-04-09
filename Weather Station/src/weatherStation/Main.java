@@ -16,7 +16,7 @@ public class Main {
 		
 		// Variables to hold file information given by user or read from file
 		boolean fileExists, infoShared = false, humidity = false, temperature = false, wind = false, pressure = false, light = false;
-		String serverUrl = null, alias = null, id = null;
+		String serverUrl = null, owner = null, alias = null, id = null;
 		int sensorCount = 0, port = 0, zip = 0;
 		
 		/* Returns true if the named file does not exist and 
@@ -35,6 +35,9 @@ public class Main {
 			    // Prompt user for pi identifying information
 				System.out.print("Enter your zipcode: ");
 				zip = Integer.parseInt(reader.readLine());
+				
+				System.out.print("What is your name?");
+				owner = reader.readLine();
 				
 				System.out.print("Give a name to your weather station (eg: PibyKate): ");
 				alias = reader.readLine();
@@ -75,6 +78,7 @@ public class Main {
 				BufferedWriter output = new BufferedWriter(new FileWriter(settingsFile));
 	            output.write(id);
 	            output.write(Integer.toString(zip));
+	            output.write(owner);
 	            output.write(alias);
 	            output.write(serverUrl);
 	            output.write(port);
@@ -103,6 +107,7 @@ public class Main {
 				// Read identifying information
 				id = fileIn.readLine();
 				zip = Integer.parseInt(fileIn.readLine());
+				owner = fileIn.readLine();
 				alias = fileIn.readLine();
 				
 				// Read server information
@@ -129,6 +134,7 @@ public class Main {
 		// Create new weatherStation with gathered information
         WeatherStation station = new WeatherStation(zip, id, port);
         station.setNumSensors(sensorCount);
+        station.setOwner(owner);
         station.setAlias(alias);
         station.setServerUrl(serverUrl);
         station.setShared(infoShared);

@@ -18,13 +18,14 @@ public class WeatherStation {
 	private int numSensors = 0;
 	private String serverUrl;
 	private String piID;
+	private String owner;
 	private String alias;
 	private int zipcode;
 	private boolean shared;
 	private ResponseHandler rHandler;
 	private RESTServer server;
-  private Timer timer;
-  private PostDataTask postDataTask;
+	private Timer timer;
+	private PostDataTask postDataTask;
 
   //How often we post data to the web app
   private final int UpdateFrequency = 1*60*1000;
@@ -85,6 +86,16 @@ public class WeatherStation {
 	// Getter method for alias
 	public String getAlias() {
 		return this.alias;
+	}
+	
+	// Setter method for alias 
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+		
+	// Getter method for alias
+	public String getOwner() {
+		return this.owner;
 	}
 	
 	// Setter method for shared
