@@ -3,6 +3,7 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,14 +16,16 @@ public class Main {
 		ws.startServer(Integer.valueOf(args[0]));*/
 		File settingsFile = new File("weatherStationSettings");
 		boolean fileExists, infoShared = false, humidity, temperature, wind, pressure, light;
-		String zipcode, serverUrl = null, alias = null, share, haveHumid, haveTemp, haveWind, havePress, haveLight, portNum, id = null;
+		String zipcode, numSensors, serverUrl = null, alias = null, share, haveHumid, haveTemp, haveWind, havePress, haveLight, portNum, id = null;
 		int sensorCount = 0;
 		int port = 0, zip = 0;
 		
-		if(!settingsFile.exists()) {
+		/* Returns true if the named file does not exist and 
+		*  was successfully created; false if the named file already exists */
+		fileExists = settingsFile.createNewFile();
+		
+		if(fileExists == true) {
 			try {
-				fileExists = settingsFile.createNewFile();
-				
 				// Open up standard input
 			    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 				
@@ -91,14 +94,51 @@ public class Main {
 	            output.close();	            
 	            
 			} catch (IOException e) {
-				System.out.println("Error in settings file creation...");
+				System.out.println("Error in creating settings file...");
 				System.exit(1);
 			}
 		}
 		
 		else {
-			System.out.println("settings file exists already");
-			// Read file to get info and prompt for any missing information
+			System.out.println("settings file exists already. Reading settings from file.");
+			try {
+				// Open up file for reading
+				BufferedReader fileIn = new BufferedReader(new FileReader(settingsFile));
+				// Read file to get settings
+				
+				// Read identifying information
+				id = fileIn.readLine();
+				zipcode = fileIn.readLine();
+				zip = Integer.parseInt(zipcode);
+				alias = fileIn.readLine();
+				
+				// Read server information
+				serverUrl = fileIn.readLine();
+				portNum = fileIn.readLine();
+				port = Integer.parseInt(portNum);
+				
+				// Share info or not and number of sensors
+				share = fileIn.readLine();
+				infoShared = Boolean.parseBoolean(share);
+				numSensors = fileIn.readLine();
+				sensorCount = Integer.parseInt(numSensors);
+				
+				// Read types of sensors
+				haveHumid = fileIn.readLine();
+				humidity = Boolean.parseBoolean(haveHumid);
+				haveTemp = fileIn.readLine();
+				temperature = Boolean.parseBoolean(haveTemp);
+				haveWind = fileIn.readLine();
+				wind = Boolean.parseBoolean(haveWind);
+				havePress = fileIn.readLine();
+				pressure = Boolean.parseBoolean(havePress);
+				haveLight = fileIn.readLine();
+				light = Boolean.parseBoolean(haveLight);
+						
+			} catch (IOException e) {
+				System.out.println("Error in reading settings file...");
+				System.exit(1);
+			}
 		}
 		
 		// Create new weatherStation with gathered information
@@ -107,6 +147,7 @@ public class Main {
         station.setAlias(alias);
         station.setServerUrl(serverUrl);
         station.setShared(infoShared);
+        System.out.println("Congratulations you have successfully created or loaded a weather station!");
 	}
 
 	private static boolean parseYesNo(String string) {
