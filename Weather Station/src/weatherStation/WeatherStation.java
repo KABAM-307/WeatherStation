@@ -10,8 +10,6 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.URL;
 
-import org.omg.CORBA.portable.ResponseHandler;
-
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -153,7 +151,7 @@ public class WeatherStation {
 										+ "\"owner\":\"" + this.getOwner() + "\",\n"
 										+ "\"location\":"+ this.getZipcode() + ",\n"
 										+ "\"share\":" + booleanToInt(this.getShared()) + "\n}\n}";
-		
+	  return data;	
 	}
 
 	public void postData() {

@@ -1,5 +1,3 @@
-
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,13 +13,17 @@ public class Main {
 		File settingsFile = new File("weatherStationSettings");
 		
 		// Variables to hold file information given by user or read from file
-		boolean fileExists, infoShared = false, humidity = false, temperature = false, wind = false, pressure = false, light = false;
+		boolean fileExists = false, infoShared = false, humidity = false, temperature = false, wind = false, pressure = false, light = false;
 		String serverUrl = null, owner = null, alias = null, id = null;
 		int sensorCount = 0, port = 0, zip = 0;
 		
 		/* Returns true if the named file does not exist and 
 		*  was successfully created; false if the named file already exists */
-		fileExists = settingsFile.createNewFile();
+    try {
+      fileExists = settingsFile.createNewFile();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 		
 		// If the file did not exist and was created, prompt user for all settings
 		if(fileExists == true) {
@@ -87,7 +89,7 @@ public class Main {
 	            output.write(Boolean.toString(humidity) + "\n");
 	            output.write(Boolean.toString(temperature) + "\n");
 	            output.write(Boolean.toString(wind) + "\n");
-	            output.write(Boolean.toString(pressure) + "\n");
+	            utput.write(Boolean.toString(pressure) + "\n");
 	            output.write(Boolean.toString(light) + "\n");
 	            output.close();	            
 	            
