@@ -38,7 +38,7 @@ public class Main {
 				System.out.print("Enter your zipcode: ");
 				zip = Integer.parseInt(reader.readLine());
 				
-				System.out.print("What is your name?");
+				System.out.print("What is your name? ");
 				owner = reader.readLine();
 				
 				System.out.print("Give a name to your weather station (eg: PibyKate): ");
@@ -89,7 +89,7 @@ public class Main {
 	            output.write(Boolean.toString(humidity) + "\n");
 	            output.write(Boolean.toString(temperature) + "\n");
 	            output.write(Boolean.toString(wind) + "\n");
-	            utput.write(Boolean.toString(pressure) + "\n");
+	            output.write(Boolean.toString(pressure) + "\n");
 	            output.write(Boolean.toString(light) + "\n");
 	            output.close();	            
 	            
@@ -135,12 +135,15 @@ public class Main {
 		
 		// Create new weatherStation with gathered information
         WeatherStation station = new WeatherStation(zip, id, port);
-        station.setNumSensors(sensorCount);
         station.setOwner(owner);
         station.setAlias(alias);
         station.setServerUrl(serverUrl);
         station.setShared(infoShared);
-        station.postData();
+        if (temperature) station.addSensor("temp", 29);
+        if (pressure) station.addSensor("pressure", 0);
+        if (humidity) station.addSensor("humidity", 29);
+        if (light) station.addSensor("light", 1);
+        station.start();
         System.out.println("Congratulations you have successfully created or loaded a weather station!");
 	}
 

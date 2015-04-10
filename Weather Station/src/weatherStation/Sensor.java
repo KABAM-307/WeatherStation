@@ -1,16 +1,19 @@
+import java.io.*;
 
 public class Sensor {
 
 	private String type;
-	private String data;
+	private double data;
+  private int pin;
 	
 	// Public constructor for Sensor
-	public Sensor(String type) {
+	public Sensor(String type, int pin) {
 		this.type = type;
+    this.pin = pin;
 	}
 	
 	// Returns the data from the sensor dependent on its type
-	public String getData() {
+	public double getData() {
 		switch(this.type) {
 			case "temp":
 				data = this.read_temperature();
@@ -36,33 +39,60 @@ public class Sensor {
 	}
 	
 	// Getter for the type of sensor: type will be temp, pressure, humidity, light 
-	public String getType(Sensor sensor) {
-		return sensor.type;
+	public String getType() {
+    return this.type;
 	}
 	
 	// All the methods below will reference a python/C library for the sensors that is already provided.
 	// This will be further integrated in sprint 2
-	private String read_humidity() {
-		// TODO Auto-generated method stub
-		// Call to python library
-		return data;
+	private double read_humidity() {
+    try {
+      Process process = new ProcessBuilder("./dht22", "h", Integer.toString(this.pin)).start();
+      InputStream is = process.getInputStream();
+      InputStreamReader isr = new InputStreamReader(is);
+      BufferedReader br = new BufferedReader(isr);
+      String line = br.readLine();
+
+      if (line == null || line == "")
+        return 0.0;
+      
+      return Double.parseDouble(line);
+    } catch(Exception e) {
+      e.printStackTrace();
+    } 
+
+    return 0.0;
 	}
 
-	private String read_pressure() {
+	private double read_pressure() {
 		// TODO Auto-generated method stub
 		// Call to python library
-		return data;
+		return 0.0;
 	}
 
-	private String read_temperature() {
-		// TODO Auto-generated method stub
-		// Call to C library
-		return data;
-	}
-	
-	private String read_light() {
-		// TODO Auto-generated method stub
-		// Just needs to read a GPIO pin reading
-		return data;
-	}
+	private double read_temperature() {
+    try {
+      Process process = new ProcessBuilder("./dht22", "t", Integer.toString(this.pin)).start();
+      InputStream is = process.getInputStream();
+      InputStreamReader isr = new InputStreamReader(is);
+      BufferedReader br = new BufferedReader(isr);
+      String line = br.readLine();
+
+      if (line == null || line == "")
+        return 0.0;
+      
+      return Double.parseDouble(line);
+    } catch(Exception e) {
+      e.printStackTrace();
+    } 
+
+    return 0.0;
+  }
+
+  private double read_light() {
+    // TODO Auto-generated method stub
+    // Just needs to read a GPIO pin reading
+    return 0.0;
+  }
+
 }

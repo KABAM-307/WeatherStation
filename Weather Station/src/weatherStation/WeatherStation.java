@@ -29,27 +29,39 @@ public class WeatherStation {
 	private RESTServer server;
 	private Timer timer;
 	private PostDataTask postDataTask;
+  private int port;
 
   //How often we post data to the web app
-  private final int UpdateFrequency = 1*60*1000;
+  private final int UpdateFrequency = 1 * 60000;
 	
 	// Constructor for a WeatherStation
 	public WeatherStation(int zipcode, String id, int port) {
+
 		if (id.equals(null)) {
 			this.piID = PiIdGenerator.generatePiID();
-		}
-		else {
+		} else {
 			this.piID = id;
 		}
-		this.zipcode = zipcode;
-		this.rHandler = new ResponseHandler(this);
-		this.startServer(port);
-		this.postDataTask = new PostDataTask(this);
 
+    this.port = port;
+    this.sensorsAttached = new LinkedList<Sensor>();
+		this.zipcode = zipcode;
+	}
+
+  public void start() {
+    //post JSON Info
+    this.postInfoJSON();
+
+    //Start webserver
+		this.rHandler = new ResponseHandler(this);
+		this.startServer(this.port);
+
+    //Set the recurring post data task
+		this.postDataTask = new PostDataTask(this);
 		this.timer = new Timer(true);
 		//Schedule the post data task, at UpdateFrequency, after 10 seconds from start
 		timer.scheduleAtFixedRate(this.postDataTask, 10*1000, UpdateFrequency);
-	}
+  } 
 	
 	public void setNumSensors(int num) {
 		this.numSensors = num;
@@ -60,6 +72,11 @@ public class WeatherStation {
 		this.sensorsAttached.add(sensor);
 		this.numSensors++;
 	}
+
+  public void addSensor(String sensor, int pin) {
+    Sensor s = new Sensor(sensor, pin);
+    this.addSensor(s);
+  } 
 	
 	// Setter method for location
 	public void setZipcode(int zipcode) {
@@ -111,41 +128,14 @@ public class WeatherStation {
 		return this.shared;
 	}
 	
-	// Handles a request from the server for information about a station
-	public String webRequestResponse() {
-		return this.alias;
-		// TODO: Web server request code goes here
-		// Returns a JSON formatted string of weather data
-	}
-	
-	// Handles a request from the server for information about a station
-	public String jsonSerialize() {
-		return this.alias;
-		// TODO: Web server post data goes here
-		// Returns JSON data serialized for POST over the web
-	}
-	
-	// Returns JSON String values of the sensorsAttached
-	public void getSensorVals() {
-		for (int i = 0; i < this.numSensors; i++) {
-			this.sensorsAttached.get(i).getData();
-		}
-	}
-	
-	// Method called when station is polled for data. Will push all sensor data vals to server
-	public void publishData(String serverIP) {
-		this.getSensorVals();
-		// TODO: HOW TO SEND TO ACTUAL SERVER?
-	}
-	
 	// Turns boolean into a 1 or 0, 0 = false, 1 = true
 	public int booleanToInt(boolean b) {
 		if (b == true) return 1; 
 		return 0;
 	}
 	
-	public String createPostJson() {
-		String data = "{\n\"RPIData\": {\n\"type\":\"info\",\n"
+	public String createInfoJSON() {
+		String data = "{\n\"RPiData\": {\n\"type\":\"info\",\n"
 										+ "\"pi_ID\":\"" + this.piID + "\",\n"
 										+ "\"alias\":\"" + this.getAlias() + "\",\n"
 										+ "\"owner\":\"" + this.getOwner() + "\",\n"
@@ -154,7 +144,7 @@ public class WeatherStation {
 	  return data;	
 	}
 
-	public void postData() {
+	public void postInfoJSON() {
 		try {
 
 		      //Open http connection, and set request method to post
@@ -163,7 +153,7 @@ public class WeatherStation {
 
 
 		      //Get the url parameters from the weather station
-		      String parameters = "json=" + this.createPostJson();
+		      String parameters = "json=" + this.createInfoJSON();
 
 
 		      //Send url parameters to server
@@ -195,6 +185,39 @@ public class WeatherStation {
 		    } catch(Exception e) {
 		      e.printStackTrace();
 	   }
+	}
+  
+	// Handles a request from the server for information about a station
+	public String webRequestResponse() {
+		return this.alias;
+		// TODO: Web server request code goes here
+		// Returns a JSON formatted string of weather data
+	}
+	
+	// Handles a request from the server for information about a station
+	public String createDataJSON() {
+		String data = "{\n\"RPiData\": {\n\"type\":\"data\",\n"
+										+ "\"pi_ID\":\"" + this.piID + "\",\n"
+										+ "\"dateval\":\"\",\n"
+										+ "\"temp\":\"" + this.getSensorVals("temp") + "\",\n"
+										+ "\"humidity\":"+ this.getSensorVals("humidity") + ",\n"
+										+ "\"light\":"+ this.getSensorVals("light") + ",\n"
+										+ "\"wind_speed\":" + this.getSensorVals("wind") + "\n}\n}";
+	  return data;	
+	}
+	
+	// Returns JSON String values of the sensorsAttached
+	public double getSensorVals(String type) {
+		for (int i = 0; i < this.numSensors; i++) {
+      if (this.sensorsAttached.get(i).getType() == type) 
+        return this.sensorsAttached.get(i).getData();
+		}
+    return 0.0;
+	}
+	
+	// Method called when station is polled for data. Will push all sensor data vals to server
+	public void publishData(String serverIP) {
+
 	}
 
 	public void startServer(int port) {

@@ -32,7 +32,7 @@ public class PostDataTask extends TimerTask {
 
 
       //Get the url parameters from the weather station
-      String parameters = "alias=" + ws.jsonSerialize();
+      String parameters = "json=" + ws.createDataJSON();
 
 
       //Send url parameters to server
