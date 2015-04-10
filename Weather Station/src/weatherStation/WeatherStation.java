@@ -145,7 +145,7 @@ public class WeatherStation {
 	}
 	
 	public String createPostJson() {
-		String data = "{\n\"RPIData\": {\n\"type\":\"info\",\n"
+		String data = "{\n\"RPiData\": {\n\"type\":\"info\",\n"
 										+ "\"pi_ID\":\"" + this.piID + "\",\n"
 										+ "\"alias\":\"" + this.getAlias() + "\",\n"
 										+ "\"owner\":\"" + this.getOwner() + "\",\n"
