@@ -9,9 +9,9 @@
 
 #define MAXTIMINGS 85
 
-int data[5] = {0,0,0,0,0};
+static int data[5] = {0,0,0,0,0};
 
-int readData(int pin, int* temp, int* humidity) {
+static int readData(int pin, int* temp, int* humidity) {
     uint8_t state = HIGH;
     uint8_t counter = 0;
     int j = 0;
@@ -76,11 +76,11 @@ int main(int argc, char* argv[]) {
   int temp = -1;
 
   delay(2000);
-  if (readData(pin, &humidity, &temp) > 0) {
+  if (readData(pin, &temp, &humidity) > 0) {
     if (!strcmp(argv[1], "h")) {
       printf("%.2f\n", (float)(humidity/10.0));
     } else {
-      printf("%.2f\n",  (float)(temp/10.0) * 0.9 + 32.0);
+      printf("%.2f\n",  (float)(temp/10.0) * 1.8 + 32.0);
     } 
   }
 
