@@ -10,6 +10,7 @@ public class Sensor {
 	public Sensor(String type, int pin) {
 		this.type = type;
     this.pin = pin;
+    this.data = 0.0;
 	}
 	
 	// Returns the data from the sensor dependent on its type
@@ -54,9 +55,15 @@ public class Sensor {
       String line = br.readLine();
 
       if (line == null || line == "")
-        return 0.0;
-      
-      return Double.parseDouble(line);
+        return data;
+
+      double read = Double.parseDouble(line);
+      if (read > 1.0) {
+        this.data = read;
+        return data;
+      } 
+
+      return data;
     } catch(Exception e) {
       e.printStackTrace();
     } 
@@ -65,9 +72,28 @@ public class Sensor {
 	}
 
 	private double read_pressure() {
-		// TODO Auto-generated method stub
-		// Call to python library
-		return 0.0;
+    try {
+      Process process = new ProcessBuilder("./pressure", Integer.toString(this.pin)).start();
+      InputStream is = process.getInputStream();
+      InputStreamReader isr = new InputStreamReader(is);
+      BufferedReader br = new BufferedReader(isr);
+      String line = br.readLine();
+
+      if (line == null || line == "")
+        return data;
+      
+      double read = Double.parseDouble(line);
+      if (read > 1) {
+        this.data = read;
+        return data;
+      } 
+
+      return data;
+    } catch(Exception e) {
+      e.printStackTrace();
+    } 
+
+    return data;
 	}
 
 	private double read_temperature() {
@@ -79,20 +105,45 @@ public class Sensor {
       String line = br.readLine();
 
       if (line == null || line == "")
-        return 0.0;
+        return data;
       
-      return Double.parseDouble(line);
+      double read = Double.parseDouble(line);
+      if (read > 1) {
+        this.data = read;
+        return data;
+      } 
+
+      return data;
     } catch(Exception e) {
       e.printStackTrace();
     } 
 
-    return 0.0;
+    return data;
   }
 
   private double read_light() {
-    // TODO Auto-generated method stub
-    // Just needs to read a GPIO pin reading
-    return 0.0;
-  }
+    try {
+      Process process = new ProcessBuilder("./light", Integer.toString(this.pin)).start();
+      InputStream is = process.getInputStream();
+      InputStreamReader isr = new InputStreamReader(is);
+      BufferedReader br = new BufferedReader(isr);
+      String line = br.readLine();
+
+      if (line == null || line == "")
+        return data;
+      
+      double read = Double.parseDouble(line);
+      if (read > 1) {
+        this.data = read;
+        return data;
+      } 
+
+      return data;
+    } catch(Exception e) {
+      e.printStackTrace();
+    } 
+
+    return data;
+  
 
 }

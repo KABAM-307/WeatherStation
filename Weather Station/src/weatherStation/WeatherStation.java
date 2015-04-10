@@ -32,7 +32,7 @@ public class WeatherStation {
   private int port;
 
   //How often we post data to the web app
-  private final int UpdateFrequency = 1 * 60000;
+  private final int UpdateFrequency = 20*1000;
 	
 	// Constructor for a WeatherStation
 	public WeatherStation(int zipcode, String id, int port) {
