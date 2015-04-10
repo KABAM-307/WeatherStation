@@ -144,6 +144,6 @@ public class Sensor {
     } 
 
     return data;
-  
+  } 
 
 }
