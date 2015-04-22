@@ -9,9 +9,9 @@
 
 #define MAXTIMINGS 85
 
-static int data[5] = {0,0,0,0,0};
+int data[5] = {0,0,0,0,0};
 
-static int readData(int pin, int* temp, int* humidity) {
+int readData(int pin, int* temp, int* humidity) {
     uint8_t state = HIGH;
     uint8_t counter = 0;
     int j = 0;

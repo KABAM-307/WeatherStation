@@ -68,12 +68,12 @@ public class Sensor {
       e.printStackTrace();
     } 
 
-    return 0.0;
+    return data;
 	}
 
 	private double read_pressure() {
     try {
-      Process process = new ProcessBuilder("./pressure", Integer.toString(this.pin)).start();
+      Process process = new ProcessBuilder("./pressure").start();
       InputStream is = process.getInputStream();
       InputStreamReader isr = new InputStreamReader(is);
       BufferedReader br = new BufferedReader(isr);
