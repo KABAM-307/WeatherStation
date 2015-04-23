@@ -32,7 +32,7 @@ public class WeatherStation {
   private int port;
 
   //How often we post data to the web app
-  private final int UpdateFrequency = 20*1000;
+  private final int UpdateFrequency = 120*1000;
 	
 	// Constructor for a WeatherStation
 	public WeatherStation(int zipcode, String id, int port) {
@@ -199,8 +199,9 @@ public class WeatherStation {
 		String data = "{\n\"RPiData\": {\n\"type\":\"data\",\n"
 										+ "\"pi_ID\":\"" + this.piID + "\",\n"
 										+ "\"dateval\":\"\",\n"
-										+ "\"temp\":\"" + this.getSensorVals("temp") + "\",\n"
+										+ "\"temp\":" + this.getSensorVals("temp") + ",\n"
 										+ "\"humidity\":"+ this.getSensorVals("humidity") + ",\n"
+										+ "\"pressure\":"+ this.getSensorVals("pressure") + ",\n"
 										+ "\"light\":"+ this.getSensorVals("light") + ",\n"
 										+ "\"wind_speed\":" + this.getSensorVals("wind") + "\n}\n}";
 	  return data;	

@@ -170,9 +170,9 @@ public class Main {
 		    station.setAlias(alias);
 		    station.setServerUrl(serverUrl);
 		    station.setShared(infoShared);
-		    if (temperature) station.addSensor("temp", 29);
+		    if (temperature) station.addSensor("temp", 0);
 		    if (pressure) station.addSensor("pressure", 0);
-		    if (humidity) station.addSensor("humidity", 29);
+		    if (humidity) station.addSensor("humidity", 0);
 		    if (light) station.addSensor("light", 1);
 		    station.start();
 		    System.out.println("Congratulations you have successfully reconfigured your weather station!");
