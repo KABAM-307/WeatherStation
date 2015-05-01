@@ -1,6 +1,6 @@
 import java.io.*;
 
-public class Sensor {
+public class Sensor implements Serializable {
 
 	private String type;
 	private double data;
