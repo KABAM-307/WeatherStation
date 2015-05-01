@@ -15,10 +15,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.UUID;
 
-public class Main {
+public class Main implements Serializable {
 	public static void main(String[] args) {
 		// Reconfigure Pi if have --reconfig flag
 		if (args.length == 1) {
