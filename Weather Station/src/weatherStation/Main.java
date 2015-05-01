@@ -21,7 +21,7 @@ import java.util.UUID;
 public class Main {
 	public static void main(String[] args) {
 		// Reconfigure Pi if have --reconfig flag
-		if (args != null) {
+		if (args.length == 1) {
 			if (args[0] != null && args[0].equals("--reconfig")) {
 				System.out.println("args[" + 0 + "] is:" + args[0]);	
 				System.out.println("Reconfiguring Weather Station");
