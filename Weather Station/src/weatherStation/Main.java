@@ -21,25 +21,27 @@ import java.util.UUID;
 public class Main {
 	public static void main(String[] args) {
 		// Reconfigure Pi if have --reconfig flag
-		if (args != null && args[0] != null && args[0].equals("--reconfig")) {
-			System.out.println("args[" + 1 + "] is:" + args[0]);
-			System.out.println("Reconfiguring Weather Station");
-			// Read piID from file
-			boolean exists = false;
-			File settingsFile = new File("weatherStationSettings");
-			try {
+		if (args != null) {
+			if (args[0] != null && args[0].equals("--reconfig")) {
+				System.out.println("args[" + 0 + "] is:" + args[0]);	
+				System.out.println("Reconfiguring Weather Station");
+				// Read piID from file
+				boolean exists = false;
+				File settingsFile = new File("weatherStationSettings");
+				try {
 			      exists = settingsFile.createNewFile();
-			} catch (Exception e) {
-			      e.printStackTrace();
-			}
-			try {
-				// Open up file to read
-			    BufferedReader reader = new BufferedReader(new FileReader(settingsFile));
-			    String id = reader.readLine();
-			    System.out.println("Reconfiguring Pi with ID: " + id);
-			    configPi(id);
-			} catch (Exception e) {
-				e.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				try {
+					// Open up file to read
+					BufferedReader reader = new BufferedReader(new FileReader(settingsFile));
+					String id = reader.readLine();
+					System.out.println("Reconfiguring Pi with ID: " + id);
+					configPi(id);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		else {
