@@ -6,6 +6,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.URL;
@@ -15,7 +16,7 @@ import com.sun.net.httpserver.HttpHandler;
 
 import java.util.Timer;
 
-public class WeatherStation {
+public class WeatherStation implements Serializable {
 	
 	private LinkedList<Sensor> sensorsAttached;
 	private int numSensors = 0;
