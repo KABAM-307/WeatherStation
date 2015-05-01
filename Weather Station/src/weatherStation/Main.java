@@ -45,18 +45,18 @@ public class Main implements Serializable {
 				    String id = recoveredStation.getID();
 					System.out.println("Reconfiguring Pi with ID: " + id);
 					file.close();
-					configPi(id);
+					configPi(id, true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
 		else {
-			configPi(null);
+			configPi(null, false);
 		}
 	}
 	
-	private static void configPi(String id) {
+	private static void configPi(String id, boolean reconfig) {
 		// Create new File
 		File settingsFile = new File("weatherStationSettings");
 		WeatherStation station;
@@ -74,7 +74,7 @@ public class Main implements Serializable {
 		}
 				
 		// If the file did not exist and was created, prompt user for all settings
-		if(fileExists == true) {
+		if(fileExists == true || reconfig == true) {
 			System.out.println("Created new file, prompting for settings.");
 			try {
 				// Open up standard input
