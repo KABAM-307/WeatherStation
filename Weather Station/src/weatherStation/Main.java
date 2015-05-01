@@ -164,6 +164,7 @@ public class Main implements Serializable {
 			      
 			      // Get Data from recovered station
 			      id = recoveredStation.getID();
+			      System.out.println("Pi id recovered is: " + id);
 			      zip = recoveredStation.getZipcode();
 			      owner = recoveredStation.getOwner();
 			      alias = recoveredStation.getAlias();
