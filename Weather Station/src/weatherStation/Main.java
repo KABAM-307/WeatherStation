@@ -33,18 +33,17 @@ public class Main {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}*/
-				try {
+				try (InputStream file = new FileInputStream("weatherStationSettings")) {
 					System.out.println("Attempting to Deserialize weatherStation");
 				    // Deserialize the settings file
-				    InputStream file = new FileInputStream("weatherStationSettings");
-				    InputStream buffer = new BufferedInputStream(file);
-				    ObjectInput input = new ObjectInputStream (buffer);
+				    ObjectInput input = new ObjectInputStream (file);
 				    // Deserialize the WeatherStation
 				    WeatherStation recoveredStation = (WeatherStation)input.readObject();
 				      
 				    // Get Data from recovered station
 				    String id = recoveredStation.getID();
 					System.out.println("Reconfiguring Pi with ID: " + id);
+					file.close();
 					configPi(id);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -155,12 +154,10 @@ public class Main {
 		else {
 				System.out.println("settings file exists already. Reading settings from file.");
 				// Deserialize saved WeatherStation in file to read information
-			    try {
+			    try (InputStream file = new FileInputStream(settingsFile)) {
 			      System.out.println("Attempting to Deserialize weatherStation");
 			      // Deserialize the settings file
-			      InputStream file = new FileInputStream(settingsFile);
-			      InputStream buffer = new BufferedInputStream(file);
-			      ObjectInput input = new ObjectInputStream (buffer);
+			      ObjectInput input = new ObjectInputStream (file);
 			      // Deserialize the WeatherStation
 			      WeatherStation recoveredStation = (WeatherStation)input.readObject();
 			      
@@ -197,7 +194,8 @@ public class Main {
 						default:
 							break;
 			    	  }
-			      }			      
+			      }
+			      file.close();
 			    } catch(ClassNotFoundException ex){
 			    	System.out.println("Error with deserializing object. Class not Found.");
 			    	System.exit(1);
@@ -240,13 +238,12 @@ public class Main {
 			station = new WeatherStation(zip, id, port);
 			createNewStation(station, owner, alias, serverUrl, infoShared, temperature, pressure, humidity, light);
 			// Save instance of station in settings file using Serialization
-			try {
+			try (FileOutputStream file = new FileOutputStream(settingsFile)) {
 				// Serialize the settings files
-				OutputStream file = new FileOutputStream(settingsFile);
-				OutputStream buffer = new BufferedOutputStream(file);
-				ObjectOutput output = new ObjectOutputStream(buffer);
+				ObjectOutputStream output = new ObjectOutputStream(file);
 				// Serialize the station
 				output.writeObject(station);
+				file.close();
 			}  catch(IOException ex){
 				System.out.println("Error with station serialization");
 		    }
