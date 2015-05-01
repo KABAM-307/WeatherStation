@@ -25,7 +25,7 @@ public class Main {
 			System.out.println("args[" + i + "] is:" + args[i]);
 		}
 		// Reconfigure Pi if have --reconfig flag
-		if (args[1].equals("--reconfig")) {
+		if (args[1] != null && args[1].equals("--reconfig")) {
 			System.out.println("Reconfiguring Weather Station");
 			// Read piID from file
 			boolean exists = false;
