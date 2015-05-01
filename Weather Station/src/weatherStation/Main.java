@@ -26,17 +26,17 @@ public class Main {
 				System.out.println("args[" + 0 + "] is:" + args[0]);	
 				System.out.println("Reconfiguring Weather Station");
 				// Read piID from file
-				boolean exists = false;
+				/*boolean exists = false;
 				File settingsFile = new File("weatherStationSettings");
 				try {
 			      exists = settingsFile.createNewFile();
 				} catch (Exception e) {
 					e.printStackTrace();
-				}
+				}*/
 				try {
 					System.out.println("Attempting to Deserialize weatherStation");
 				    // Deserialize the settings file
-				    InputStream file = new FileInputStream(settingsFile);
+				    InputStream file = new FileInputStream("weatherStationSettings");
 				    InputStream buffer = new BufferedInputStream(file);
 				    ObjectInput input = new ObjectInputStream (buffer);
 				    // Deserialize the WeatherStation
