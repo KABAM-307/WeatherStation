@@ -34,9 +34,16 @@ public class Main {
 					e.printStackTrace();
 				}
 				try {
-					// Open up file to read
-					BufferedReader reader = new BufferedReader(new FileReader(settingsFile));
-					String id = reader.readLine();
+					System.out.println("Attempting to Deserialize weatherStation");
+				    // Deserialize the settings file
+				    InputStream file = new FileInputStream(settingsFile);
+				    InputStream buffer = new BufferedInputStream(file);
+				    ObjectInput input = new ObjectInputStream (buffer);
+				    // Deserialize the WeatherStation
+				    WeatherStation recoveredStation = (WeatherStation)input.readObject();
+				      
+				    // Get Data from recovered station
+				    String id = recoveredStation.getID();
 					System.out.println("Reconfiguring Pi with ID: " + id);
 					configPi(id);
 				} catch (Exception e) {
@@ -55,7 +62,7 @@ public class Main {
 		WeatherStation station;
 		// Variables to hold file information given by user or read from file
 		boolean fileExists = false, infoShared = false, humidity = false, temperature = false, wind = false, pressure = false, light = false;
-		String serverUrl = null, owner = null, alias = null, piId = id;
+		String serverUrl = null, owner = null, alias = null, piId = null;
 		int sensorCount = 0, port = 0, zip = 0;
 				
 		/* Returns true if the named file does not exist and 
@@ -73,7 +80,12 @@ public class Main {
 				// Open up standard input
 				BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 				
-				piId = PiIdGenerator.generatePiID();
+				if (id == null) {
+					piId = PiIdGenerator.generatePiID();
+				}
+				else {
+					piId = id; 
+				}
 				
 				// Prompt user for pi identifying information
 				System.out.print("Enter your zipcode: ");
