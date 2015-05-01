@@ -37,11 +37,7 @@ public class WeatherStation {
 	// Constructor for a WeatherStation
 	public WeatherStation(int zipcode, String id, int port) {
 
-		if (id.equals(null)) {
-			this.piID = PiIdGenerator.generatePiID();
-		} else {
-			this.piID = id;
-		}
+		this.piID = id;
 
 		this.port = port;
 		this.sensorsAttached = new LinkedList<Sensor>();
