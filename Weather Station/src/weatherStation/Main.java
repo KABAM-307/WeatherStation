@@ -73,9 +73,8 @@ public class Main {
 				// Open up standard input
 				BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 				
-				if (piId.equals(null)) {
-					piId = PiIdGenerator.generatePiID();
-				}
+				piId = PiIdGenerator.generatePiID();
+				
 				// Prompt user for pi identifying information
 				System.out.print("Enter your zipcode: ");
 				zip = Integer.parseInt(reader.readLine());
