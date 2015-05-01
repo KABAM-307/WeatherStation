@@ -21,11 +21,11 @@ import java.util.UUID;
 public class Main {
 	public static void main(String[] args) {
 		System.out.println("Printing out command arguments");
-		if (args[1] != null) {
-			System.out.println("args[" + 1 + "] is:" + args[1]);
+		if (args[0] != null) {
+			System.out.println("args[" + 1 + "] is:" + args[0]);
 		}
 		// Reconfigure Pi if have --reconfig flag
-		if (args[1] != null && args[1].equals("--reconfig")) {
+		if (args[0] != null && args[0].equals("--reconfig")) {
 			System.out.println("Reconfiguring Weather Station");
 			// Read piID from file
 			boolean exists = false;
