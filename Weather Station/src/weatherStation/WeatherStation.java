@@ -39,7 +39,6 @@ public class WeatherStation implements Serializable {
 	public WeatherStation(int zipcode, String id, int port) {
 
 		this.piID = id;
-
 		this.port = port;
 		this.sensorsAttached = new LinkedList<Sensor>();
 		this.zipcode = zipcode;

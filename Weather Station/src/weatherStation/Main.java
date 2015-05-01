@@ -117,34 +117,13 @@ public class Main implements Serializable {
 				temperature = parseYesNo(reader.readLine());
 				if (temperature) sensorCount++;
 						
-				/*System.out.print("Do you have a wind sensor? (Y for yes, N for no) ");
-				wind = parseYesNo(reader.readLine());
-				if (wind) sensorCount++;*/
-						
 				System.out.print("Do you have a presure sensor? (Y for yes, N for no) ");
 				pressure = parseYesNo(reader.readLine());
 				if(pressure) sensorCount++;
 					    
 				System.out.print("Do you have a light sensor? (Y for yes, N for no) ");
 				light = parseYesNo(reader.readLine());
-				if(light) sensorCount++;
-				
-				/* Write all info to the file
-				BufferedWriter output = new BufferedWriter(new FileWriter(settingsFile));
-			    output.write(id + "\n");
-			    output.write(Integer.toString(zip) + "\n");
-			    output.write(owner + "\n");
-			    output.write(alias + "\n");
-			    output.write(serverUrl + "\n");
-			    output.write(port + "\n");
-			    output.write(Boolean.toString(infoShared) + "\n");
-			    output.write(Integer.toString(sensorCount) + "\n");
-			    output.write(Boolean.toString(humidity) + "\n");
-			    output.write(Boolean.toString(temperature) + "\n");
-			    output.write(Boolean.toString(wind) + "\n");
-			    output.write(Boolean.toString(pressure) + "\n");
-			    output.write(Boolean.toString(light) + "\n");
-			    output.close();	*/            
+				if(light) sensorCount++;          
 			            
 			} catch (IOException e) {
 				System.out.println("Error in creating settings file...");
@@ -163,8 +142,8 @@ public class Main implements Serializable {
 			      WeatherStation recoveredStation = (WeatherStation)input.readObject();
 			      
 			      // Get Data from recovered station
-			      id = recoveredStation.getID();
-			      System.out.println("Pi id recovered is: " + id);
+			      piId = recoveredStation.getID();
+			      System.out.println("Pi id recovered is: " + piId);
 			      zip = recoveredStation.getZipcode();
 			      owner = recoveredStation.getOwner();
 			      alias = recoveredStation.getAlias();
@@ -205,39 +184,9 @@ public class Main implements Serializable {
 			    	System.out.println("Error with deserializing object. IO Exception");
 			    	System.exit(1);
 			    }
-				/*try {
-					// Open up file for reading
-					BufferedReader fileIn = new BufferedReader(new FileReader(settingsFile));
-					// Read file to get settings
-					
-					// Read identifying information
-					id = fileIn.readLine();
-					zip = Integer.parseInt(fileIn.readLine());
-					owner = fileIn.readLine();
-					alias = fileIn.readLine();
-					
-					// Read server information
-					serverUrl = fileIn.readLine();
-					port = Integer.parseInt(fileIn.readLine());
-					
-					// Share info or not and number of sensors
-					infoShared = Boolean.parseBoolean(fileIn.readLine());
-					sensorCount = Integer.parseInt(fileIn.readLine());
-					
-					// Read types of sensors
-					humidity = Boolean.parseBoolean(fileIn.readLine());
-					temperature = Boolean.parseBoolean(fileIn.readLine());
-					wind = Boolean.parseBoolean(fileIn.readLine());
-					pressure = Boolean.parseBoolean(fileIn.readLine());
-					light = Boolean.parseBoolean(fileIn.readLine());
-								
-				} catch (IOException e) {
-					System.out.println("Error in reading settings file...");
-					System.exit(1);
-				}*/
 			}
 			
-			station = new WeatherStation(zip, id, port);
+			station = new WeatherStation(zip, piId, port);
 			createNewStation(station, owner, alias, serverUrl, infoShared, temperature, pressure, humidity, light);
 			// Save instance of station in settings file using Serialization
 			try (FileOutputStream file = new FileOutputStream(settingsFile)) {
