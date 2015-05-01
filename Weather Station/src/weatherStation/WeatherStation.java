@@ -19,7 +19,9 @@ import java.util.Timer;
 public class WeatherStation implements Serializable {
 	
 	private LinkedList<Sensor> sensorsAttached;
+	private LinkedList<Data> historicalData;
 	private int numSensors = 0;
+	private int numDataEntries = 0;
 	private String serverUrl;
 	private String piID;
 	private String owner;
@@ -29,11 +31,13 @@ public class WeatherStation implements Serializable {
 	private ResponseHandler rHandler;
 	private RESTServer server;
 	private Timer timer;
+	private Timer timer2;
 	private PostDataTask postDataTask;
+	private DataThread dataThread;
 	private int port;
 
-  //How often we post data to the web app
-  private final int UpdateFrequency = 120*1000;
+	//How often we post data to the web app
+	private final int UpdateFrequency = 120*1000;
 	
 	// Constructor for a WeatherStation
 	public WeatherStation(int zipcode, String id, int port) {
@@ -41,10 +45,11 @@ public class WeatherStation implements Serializable {
 		this.piID = id;
 		this.port = port;
 		this.sensorsAttached = new LinkedList<Sensor>();
+		this.historicalData = new LinkedList<Data>();
 		this.zipcode = zipcode;
 	}
 
-  public void start() {
+   public void start() {
     //post JSON Info
     this.postInfoJSON();
 
@@ -57,7 +62,7 @@ public class WeatherStation implements Serializable {
 	this.timer = new Timer(true);
 	//Schedule the post data task, at UpdateFrequency, after 10 seconds from start
 	timer.scheduleAtFixedRate(this.postDataTask, 10*1000, UpdateFrequency);
-  } 
+   } 
 	
 	public void setNumSensors(int num) {
 		this.numSensors = num;
@@ -144,6 +149,43 @@ public class WeatherStation implements Serializable {
 		return this.shared;
 	}
 	
+	// Add Data to the station's historical data
+	public void addToHistoricalData(Data newData) {
+		this.historicalData.add(newData);
+		this.numDataEntries++;
+	}
+	
+	public String getHistoricalJSON(int num) {
+		String data; 
+		int totalHistorical = this.historicalData.size();
+		for (int i = totalHistorical - 1; i > (totalHistorical - 1) - num; i--) {
+			data += this.historicalData.get(i).createDataJSON();
+		}
+	}
+	
+	public void collectData() {
+		final WeatherStation station = this;
+		final Data data = new Data();
+		Thread thread = new Thread() {
+			WeatherStation s = station;
+			Data d = data;
+			public void run(WeatherStation station, Data data){
+				d.getData(s, d);
+				System.out.println("Thread Running");
+		    }
+		};
+		
+		this.dataThread = new DataThread(thread);
+		this.timer2 = new Timer(true);
+		//Schedule the thread to run once every minute
+		timer2.scheduleAtFixedRate(this.dataThread, 10*1000, 60 * 1000);
+		
+	}
+	
+	public int getNumDataEntries() {
+		return this.numDataEntries;
+	}
+	
 	// Turns boolean into a 1 or 0, 0 = false, 1 = true
 	public int booleanToInt(boolean b) {
 		if (b == true) return 1; 
@@ -208,19 +250,6 @@ public class WeatherStation implements Serializable {
 		return this.alias;
 		// TODO: Web server request code goes here
 		// Returns a JSON formatted string of weather data
-	}
-	
-	// Handles a request from the server for information about a station
-	public String createDataJSON() {
-		String data = "{\n\"RPiData\": {\n\"type\":\"data\",\n"
-										+ "\"pi_ID\":\"" + this.piID + "\",\n"
-										+ "\"dateval\":\"\",\n"
-										+ "\"temp\":" + this.getSensorVals("temp") + ",\n"
-										+ "\"humidity\":"+ this.getSensorVals("humidity") + ",\n"
-										+ "\"pressure\":"+ this.getSensorVals("pressure") + ",\n"
-										+ "\"light\":"+ this.getSensorVals("light") + ",\n"
-										+ "\"wind_speed\":" + this.getSensorVals("wind") + "\n}\n}";
-	  return data;	
 	}
 	
 	// Returns JSON String values of the sensorsAttached

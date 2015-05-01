@@ -201,7 +201,7 @@ public class Main implements Serializable {
 				System.exit(0);
 		    }
 		    station.start();
-		    System.out.println("Congratulations you have successfully reconfigured your weather station!");
+		    System.out.println("Congratulations you have successfully setup or reconfigured your weather station!");
 	}
 
 	private static boolean parseYesNo(String string) {
