@@ -247,6 +247,8 @@ public class Main implements Serializable {
 				file.close();
 			}  catch(IOException ex){
 				System.out.println("Error with station serialization");
+				ex.printStackTrace();
+				System.exit(0);
 		    }
 		    station.start();
 		    System.out.println("Congratulations you have successfully reconfigured your weather station!");
