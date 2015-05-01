@@ -1,10 +1,21 @@
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.util.LinkedList;
 import java.util.UUID;
 
 public class Main {
@@ -42,7 +53,7 @@ public class Main {
 	private static void configPi(String id) {
 		// Create new File
 		File settingsFile = new File("weatherStationSettings");
-				
+		WeatherStation station;
 		// Variables to hold file information given by user or read from file
 		boolean fileExists = false, infoShared = false, humidity = false, temperature = false, wind = false, pressure = false, light = false;
 		String serverUrl = null, owner = null, alias = null, piId = id;
@@ -58,6 +69,7 @@ public class Main {
 				
 		// If the file did not exist and was created, prompt user for all settings
 		if(fileExists == true) {
+			System.out.println("Created new file, prompting for settings.");
 			try {
 				// Open up standard input
 				BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -95,9 +107,9 @@ public class Main {
 				temperature = parseYesNo(reader.readLine());
 				if (temperature) sensorCount++;
 						
-				System.out.print("Do you have a wind sensor? (Y for yes, N for no) ");
+				/*System.out.print("Do you have a wind sensor? (Y for yes, N for no) ");
 				wind = parseYesNo(reader.readLine());
-				if (wind) sensorCount++;
+				if (wind) sensorCount++;*/
 						
 				System.out.print("Do you have a presure sensor? (Y for yes, N for no) ");
 				pressure = parseYesNo(reader.readLine());
@@ -106,8 +118,8 @@ public class Main {
 				System.out.print("Do you have a light sensor? (Y for yes, N for no) ");
 				light = parseYesNo(reader.readLine());
 				if(light) sensorCount++;
-					    
-				// Write all info to the file -- save instance of a class instead?
+				
+				/* Write all info to the file
 				BufferedWriter output = new BufferedWriter(new FileWriter(settingsFile));
 			    output.write(id + "\n");
 			    output.write(Integer.toString(zip) + "\n");
@@ -122,7 +134,7 @@ public class Main {
 			    output.write(Boolean.toString(wind) + "\n");
 			    output.write(Boolean.toString(pressure) + "\n");
 			    output.write(Boolean.toString(light) + "\n");
-			    output.close();	            
+			    output.close();	*/            
 			            
 			} catch (IOException e) {
 				System.out.println("Error in creating settings file...");
@@ -132,7 +144,58 @@ public class Main {
 				
 		else {
 				System.out.println("settings file exists already. Reading settings from file.");
-				try {
+				// Deserialize saved WeatherStation in file to read information
+			    try {
+			      System.out.println("Attempting to Deserialize weatherStation");
+			      // Deserialize the settings file
+			      InputStream file = new FileInputStream(settingsFile);
+			      InputStream buffer = new BufferedInputStream(file);
+			      ObjectInput input = new ObjectInputStream (buffer);
+			      // Deserialize the WeatherStation
+			      WeatherStation recoveredStation = (WeatherStation)input.readObject();
+			      
+			      // Get Data from recovered station
+			      id = recoveredStation.getID();
+			      zip = recoveredStation.getZipcode();
+			      owner = recoveredStation.getOwner();
+			      alias = recoveredStation.getAlias();
+					
+			      // Read server information
+			      serverUrl = recoveredStation.getServerUrl();
+			      port = recoveredStation.getPort();
+				
+			      // Share info or not and number of sensors
+			      infoShared = recoveredStation.getShared();
+			      sensorCount = recoveredStation.getSensorCount();
+					
+			      // Read types of sensors
+			      LinkedList<Sensor> sensors = recoveredStation.getSensors();
+			      for (int i = 0; i < sensorCount; i++) {
+			    	  switch(sensors.get(i).getType()) {
+						case "temp":
+							temperature = true;
+							break;
+						case "pressure":
+							pressure = true;
+							break;
+						case "humidity":
+							humidity = true;
+							break;
+						case "light":
+							light = true;
+							break;
+						default:
+							break;
+			    	  }
+			      }			      
+			    } catch(ClassNotFoundException ex){
+			    	System.out.println("Error with deserializing object. Class not Found.");
+			    	System.exit(1);
+			    } catch(IOException ex){
+			    	System.out.println("Error with deserializing object. IO Exception");
+			    	System.exit(1);
+			    }
+				/*try {
 					// Open up file for reading
 					BufferedReader fileIn = new BufferedReader(new FileReader(settingsFile));
 					// Read file to get settings
@@ -161,19 +224,22 @@ public class Main {
 				} catch (IOException e) {
 					System.out.println("Error in reading settings file...");
 					System.exit(1);
-				}
+				}*/
 			}
-				
-			// Create new weatherStation with gathered information
-		    WeatherStation station = new WeatherStation(zip, id, port);
-		    station.setOwner(owner);
-		    station.setAlias(alias);
-		    station.setServerUrl(serverUrl);
-		    station.setShared(infoShared);
-		    if (temperature) station.addSensor("temp", 0);
-		    if (pressure) station.addSensor("pressure", 0);
-		    if (humidity) station.addSensor("humidity", 0);
-		    if (light) station.addSensor("light", 1);
+			
+			station = new WeatherStation(zip, id, port);
+			createNewStation(station, owner, alias, serverUrl, infoShared, temperature, pressure, humidity, light);
+			// Save instance of station in settings file using Serialization
+			try {
+				// Serialize the settings files
+				OutputStream file = new FileOutputStream(settingsFile);
+				OutputStream buffer = new BufferedOutputStream(file);
+				ObjectOutput output = new ObjectOutputStream(buffer);
+				// Serialize the station
+				output.writeObject(station);
+			}  catch(IOException ex){
+				System.out.println("Error with station serialization");
+		    }
 		    station.start();
 		    System.out.println("Congratulations you have successfully reconfigured your weather station!");
 	}
@@ -183,5 +249,17 @@ public class Main {
 			return true;
 		}
 		return false;
+	}
+	
+	private static void createNewStation(WeatherStation station, String owner, String alias, String serverUrl, boolean infoShared, boolean temp, boolean press, boolean humid, boolean light) {
+		// Create new weatherStation with gathered information
+	    station.setOwner(owner);
+	    station.setAlias(alias);
+	    station.setServerUrl(serverUrl);
+	    station.setShared(infoShared);
+	    if (temp) station.addSensor("temp", 0);
+	    if (press) station.addSensor("pressure", 0);
+	    if (humid) station.addSensor("humidity", 0);
+	    if (light) station.addSensor("light", 1);
 	}
 }

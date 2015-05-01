@@ -29,7 +29,7 @@ public class WeatherStation {
 	private RESTServer server;
 	private Timer timer;
 	private PostDataTask postDataTask;
-  private int port;
+	private int port;
 
   //How often we post data to the web app
   private final int UpdateFrequency = 120*1000;
@@ -43,8 +43,8 @@ public class WeatherStation {
 			this.piID = id;
 		}
 
-    this.port = port;
-    this.sensorsAttached = new LinkedList<Sensor>();
+		this.port = port;
+		this.sensorsAttached = new LinkedList<Sensor>();
 		this.zipcode = zipcode;
 	}
 
@@ -53,18 +53,28 @@ public class WeatherStation {
     this.postInfoJSON();
 
     //Start webserver
-		this.rHandler = new ResponseHandler(this);
-		this.startServer(this.port);
+	this.rHandler = new ResponseHandler(this);
+	this.startServer(this.port);
 
     //Set the recurring post data task
-		this.postDataTask = new PostDataTask(this);
-		this.timer = new Timer(true);
-		//Schedule the post data task, at UpdateFrequency, after 10 seconds from start
-		timer.scheduleAtFixedRate(this.postDataTask, 10*1000, UpdateFrequency);
+	this.postDataTask = new PostDataTask(this);
+	this.timer = new Timer(true);
+	//Schedule the post data task, at UpdateFrequency, after 10 seconds from start
+	timer.scheduleAtFixedRate(this.postDataTask, 10*1000, UpdateFrequency);
   } 
 	
 	public void setNumSensors(int num) {
 		this.numSensors = num;
+	}
+	
+	// Getter method for numSensors
+	public int getSensorCount() {
+		return this.numSensors;
+	}
+	
+	// Getter for sensors
+	public LinkedList<Sensor> getSensors() {
+		return this.sensorsAttached;
 	}
 	
 	// Add a sensor to the list of attached sensors
@@ -73,11 +83,21 @@ public class WeatherStation {
 		this.numSensors++;
 	}
 
-  public void addSensor(String sensor, int pin) {
-    Sensor s = new Sensor(sensor, pin);
-    this.addSensor(s);
-  } 
+	public void addSensor(String sensor, int pin) {
+		Sensor s = new Sensor(sensor, pin);
+		this.addSensor(s);
+	} 
+  
+  	// Getter method for piID
+  	public String getID() {
+  		return this.piID;
+  	}
 	
+  	// Getter method for port
+  	public int getPort() {
+  		return this.port;
+  	}
+  	
 	// Setter method for location
 	public void setZipcode(int zipcode) {
 		this.zipcode = zipcode;

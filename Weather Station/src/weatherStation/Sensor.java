@@ -4,7 +4,7 @@ public class Sensor {
 
 	private String type;
 	private double data;
-  private int pin;
+	private int pin;
 	
 	// Public constructor for Sensor
 	public Sensor(String type, int pin) {
