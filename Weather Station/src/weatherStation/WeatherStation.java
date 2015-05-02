@@ -1,4 +1,3 @@
-
 import java.util.LinkedList;
 import java.util.UUID;
 import java.io.BufferedReader;
@@ -156,11 +155,12 @@ public class WeatherStation implements Serializable {
 	}
 	
 	public String getHistoricalJSON(int num) {
-		String data; 
+		String data = "";
 		int totalHistorical = this.historicalData.size();
 		for (int i = totalHistorical - 1; i > (totalHistorical - 1) - num; i--) {
 			data += this.historicalData.get(i).createDataJSON();
 		}
+    return data;
 	}
 	
 	public void collectData() {

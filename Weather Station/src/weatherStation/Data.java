@@ -1,5 +1,3 @@
-package weatherStation;
-
 import java.util.Date;
 import java.util.LinkedList;
 
@@ -50,13 +48,13 @@ public class Data {
 	// Handles a request from the server for information about a Data
 	public String createDataJSON() {
 		String data = "{\n\"RPiData\": {\n\"type\":\"data\",\n"
-										+ "\"pi_ID\":\"" + this.getPiId() + "\",\n"
-										+ "\"dateval\":\"\",\n"
-										+ "\"temp\":" + this.temp + ",\n"
-										+ "\"humidity\":"+ this.humidity + ",\n"
-										+ "\"pressure\":"+ this.pressure + ",\n"
-										+ "\"light\":"+ this.light + ",\n"
-										+ "\"wind_speed\":" + this.wind + "\n}\n}";
+      + "\"pi_ID\":\"" + this.getPiId() + "\",\n"
+      + "\"dateval\":\"\",\n"
+      + "\"temp\":" + this.temp + ",\n"
+      + "\"humidity\":"+ this.humidity + ",\n"
+      + "\"pressure\":"+ this.pressure + ",\n"
+      + "\"light\":"+ this.light + ",\n"
+      + "\"wind_speed\":" + this.wind + "\n}\n}";
 		 return data;	
 	}
 	

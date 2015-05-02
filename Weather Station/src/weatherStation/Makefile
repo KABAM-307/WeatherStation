@@ -14,8 +14,12 @@ pressure: pressure.c
 light: light.c
 	gcc -o $@ $^ $(CFLAGS) -L. -ladc
 
+wind: wind.c
+	gcc -o $@ $^ $(CFLAGS) -L. -ladc
+
 clean:
 	rm dht22
 	rm light
 	rm pressure
+	rm wind
 	rm *.class

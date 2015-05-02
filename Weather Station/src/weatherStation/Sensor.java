@@ -28,6 +28,9 @@ public class Sensor implements Serializable {
 			case "light":
 				data = this.read_light();
 				break;
+			case "wind":
+				data = this.read_wind();
+				break;
 			default:
 				break;
 		}
@@ -48,6 +51,7 @@ public class Sensor implements Serializable {
 	// This will be further integrated in sprint 2
 	private double read_humidity() {
     try {
+      //Make a system call to the program to read data
       Process process = new ProcessBuilder("./dht22", "h", Integer.toString(this.pin)).start();
       InputStream is = process.getInputStream();
       InputStreamReader isr = new InputStreamReader(is);
@@ -73,6 +77,7 @@ public class Sensor implements Serializable {
 
 	private double read_pressure() {
     try {
+      //Make a system call to the program to read data
       Process process = new ProcessBuilder("./pressure").start();
       InputStream is = process.getInputStream();
       InputStreamReader isr = new InputStreamReader(is);
@@ -98,6 +103,7 @@ public class Sensor implements Serializable {
 
 	private double read_temperature() {
     try {
+      //Make a system call to the program to read data
       Process process = new ProcessBuilder("./dht22", "t", Integer.toString(this.pin)).start();
       InputStream is = process.getInputStream();
       InputStreamReader isr = new InputStreamReader(is);
@@ -123,6 +129,7 @@ public class Sensor implements Serializable {
 
   private double read_light() {
     try {
+      //Make a system call to the program to read data
       Process process = new ProcessBuilder("./light", Integer.toString(this.pin)).start();
       InputStream is = process.getInputStream();
       InputStreamReader isr = new InputStreamReader(is);
@@ -146,4 +153,29 @@ public class Sensor implements Serializable {
     return data;
   } 
 
+  private double read_wind() {
+    try {
+      //Make a system call to the program to read data
+      Process process = new ProcessBuilder("./wind", Integer.toString(this.pin)).start();
+      InputStream is = process.getInputStream();
+      InputStreamReader isr = new InputStreamReader(is);
+      BufferedReader br = new BufferedReader(isr);
+      String line = br.readLine();
+
+      if (line == null || line == "")
+        return data;
+      
+      double read = Double.parseDouble(line);
+      if (read > 1) {
+        this.data = read;
+        return data;
+      } 
+
+      return data;
+    } catch(Exception e) {
+      e.printStackTrace();
+    } 
+
+    return data;
+  } 
 }
