@@ -1,6 +1,6 @@
 CFLAGS = -std=c99 -lwiringPi
 
-all: main dht22 light pressure
+all: main dht22 light pressure wind
 
 main: *.java
 	javac Main.java

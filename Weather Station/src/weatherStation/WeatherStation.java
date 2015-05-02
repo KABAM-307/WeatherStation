@@ -36,7 +36,7 @@ public class WeatherStation implements Serializable {
 	private int port;
 
 	//How often we post data to the web app
-	private final int UpdateFrequency = 120*1000;
+	private final int UpdateFrequency = 12*1000;
 	
 	// Constructor for a WeatherStation
 	public WeatherStation(int zipcode, String id, int port) {

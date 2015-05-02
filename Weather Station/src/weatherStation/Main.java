@@ -125,6 +125,10 @@ public class Main implements Serializable {
 				light = parseYesNo(reader.readLine());
 				if(light) sensorCount++;          
 			            
+				System.out.print("Do you have a wind sensor? (Y for yes, N for no) ");
+				wind = parseYesNo(reader.readLine());
+				if(wind) sensorCount++;          
+			            
 			} catch (IOException e) {
 				System.out.println("Error in creating settings file...");
 				System.exit(1);
@@ -171,6 +175,9 @@ public class Main implements Serializable {
 							break;
 						case "light":
 							light = true;
+							break;
+						case "wind":
+							wind = true;
 							break;
 						default:
 							break;
@@ -221,5 +228,6 @@ public class Main implements Serializable {
 	    if (press) station.addSensor("pressure", 0);
 	    if (humid) station.addSensor("humidity", 0);
 	    if (light) station.addSensor("light", 1);
+	    if (wind) station.addSensor("wind", 1);
 	}
 }
